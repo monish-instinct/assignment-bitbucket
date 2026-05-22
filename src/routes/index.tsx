@@ -12,8 +12,8 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Lumen Tasks — Beautiful Todo App" },
-      { name: "description", content: "A premium, modern todo app with priorities, due dates, search and dark mode." },
+      { title: "Tasks" },
+      { name: "description", content: "A minimal, premium todo app with priorities, due dates, search and dark mode." },
     ],
   }),
 });
@@ -41,17 +41,15 @@ function Dashboard() {
   return (
     <div className="min-h-screen">
       <Header onAdd={() => setModalOpen(true)} />
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-        <div className="flex gap-6">
+      <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
+        <div className="flex gap-10">
           <Sidebar />
-          <section className="min-w-0 flex-1 space-y-4">
-            <div className="flex items-end justify-between gap-3">
-              <div>
-                <h2 className="text-2xl font-semibold tracking-tight">{heading}</h2>
-                <p className="text-sm text-muted-foreground">
-                  {stats.pending} pending · {stats.completed} completed · {stats.progress}% done
-                </p>
-              </div>
+          <section className="min-w-0 flex-1 space-y-5">
+            <div>
+              <h2 className="text-xl font-semibold tracking-tight">{heading}</h2>
+              <p className="mt-0.5 text-sm text-muted-foreground tabular-nums">
+                {stats.pending} pending · {stats.completed} completed · {stats.progress}% done
+              </p>
             </div>
             <MobileFilters />
             <TaskList modalOpen={modalOpen} setModalOpen={setModalOpen} />
