@@ -17,34 +17,62 @@ interface Props {
 }
 
 export function TaskList({ modalOpen, setModalOpen }: Props) {
-  const { filteredTasks, loading, error, addTask, updateTask, deleteTask, toggleTask, filter, search } = useTasks();
+  const {
+    filteredTasks, tasks, loading, error, pendingIds, refetch,
+    addTask, updateTask, deleteTask, toggleTask, filter, search,
+  } = useTasks();
   const [editing, setEditing] = useState<Task | null>(null);
   const [confirming, setConfirming] = useState<Task | null>(null);
 
-  const openNew = () => { setEditing(null); setModalOpen(true); };
   const openEdit = (t: Task) => { setEditing(t); setModalOpen(true); };
 
-  if (loading) return <TaskSkeleton />;
+  if (loading && tasks.length === 0) return <TaskSkeleton />;
 
   return (
     <>
       {error && (
-        <div className="mb-3 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-2 text-sm text-destructive">
-          {error}
+        <div className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-border/70 bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+          <span>{error}</span>
+          <button
+            onClick={() => void refetch()}
+            className="font-medium text-foreground hover:underline"
+          >
+            Retry
+          </button>
         </div>
       )}
 
       {filteredTasks.length === 0 ? (
-        <EmptyState
-          title={search ? "No matching tasks" : filter === "completed" ? "Nothing completed yet" : filter === "pending" ? "No pending tasks" : "Your day is a blank canvas"}
-          hint={search ? "Try a different keyword." : "Click New Task to add your first item — press Enter to save it fast."}
-        />
+        error && tasks.length === 0 ? (
+          <EmptyState
+            variant="error"
+            title="Couldn't load your tasks"
+            hint="We'll keep trying. Your local changes are saved."
+            onRetry={() => void refetch()}
+          />
+        ) : (
+          <EmptyState
+            title={
+              search ? "No matching tasks"
+              : filter === "completed" ? "Nothing completed yet"
+              : filter === "pending" ? "No pending tasks"
+              : "You're all caught up"
+            }
+            hint={search ? "Try a different keyword." : "Create your first task to get started."}
+          />
+        )
       ) : (
-        <ul className="space-y-3">
+        <ul className="space-y-2">
           <AnimatePresence initial={false}>
             {filteredTasks.map((t) => (
               <li key={t.id}>
-                <TaskCard task={t} onToggle={toggleTask} onEdit={openEdit} onDelete={setConfirming} />
+                <TaskCard
+                  task={t}
+                  pending={pendingIds.has(t.id)}
+                  onToggle={toggleTask}
+                  onEdit={openEdit}
+                  onDelete={setConfirming}
+                />
               </li>
             ))}
           </AnimatePresence>
@@ -56,12 +84,10 @@ export function TaskList({ modalOpen, setModalOpen }: Props) {
         task={editing}
         onClose={() => { setModalOpen(false); setEditing(null); }}
         onSubmit={(data) => {
-          if (editing) updateTask(editing.id, data);
-          else addTask(data);
+          if (editing) void updateTask(editing.id, data);
+          else void addTask(data);
         }}
       />
-      {/* Hidden helper for external "new" button */}
-      <button type="button" className="hidden" onClick={openNew} aria-hidden />
 
       <AlertDialog open={!!confirming} onOpenChange={(o) => !o && setConfirming(null)}>
         <AlertDialogContent>
@@ -72,9 +98,9 @@ export function TaskList({ modalOpen, setModalOpen }: Props) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancel</AlertogCancel>
             <AlertDialogAction
-              onClick={() => { if (confirming) deleteTask(confirming.id); setConfirming(null); }}
+              onClick={() => { if (confirming) void deleteTask(confirming.id); setConfirming(null); }}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               Delete
