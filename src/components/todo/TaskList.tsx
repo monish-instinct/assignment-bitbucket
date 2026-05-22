@@ -98,7 +98,7 @@ export function TaskList({ modalOpen, setModalOpen }: Props) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertogCancel>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => { if (confirming) void deleteTask(confirming.id); setConfirming(null); }}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
