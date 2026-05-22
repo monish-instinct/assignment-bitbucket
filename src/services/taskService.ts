@@ -44,13 +44,13 @@ export const taskApi = {
   /** Replace a task (full update). */
   async update(id: string, task: Partial<Task>): Promise<Task> {
     const { data } = await api.put<Task>(`${ENDPOINT}/${id}`, task);
-    return normalize({ id, ...task, ...(data ?? {}) });
+    return normalize({ ...task, ...(data ?? {}), id });
   },
 
   /** Toggle / patch completion or any partial field. */
   async patch(id: string, patch: Partial<Task>): Promise<Task> {
     const { data } = await api.patch<Task>(`${ENDPOINT}/${id}`, patch);
-    return normalize({ id, ...patch, ...(data ?? {}) });
+    return normalize({ ...patch, ...(data ?? {}), id });
   },
 
   /** Delete a task by id. */
