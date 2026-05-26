@@ -1,8 +1,3 @@
-/**
- * Realistic seed data used when the API returns no tasks and
- * localStorage is empty. Covers priorities, completion states,
- * past / future / no due dates, and long titles.
- */
 import type { Task } from "@/types/task";
 
 const iso = (days: number) => {

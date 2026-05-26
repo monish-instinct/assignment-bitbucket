@@ -1,16 +1,3 @@
-/**
- * Task API service.
- *
- * Thin wrapper over the shared Axios instance. Each method returns
- * a typed Promise and lets callers handle errors / toasts.
- *
- * Endpoints (Beeceptor mock):
- *   GET    /todos
- *   POST   /todos
- *   PUT    /todos/:id
- *   PATCH  /todos/:id      → toggle completion
- *   DELETE /todos/:id
- */
 import { api } from "./api";
 import type { Task } from "@/types/task";
 

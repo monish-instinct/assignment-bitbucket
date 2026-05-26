@@ -1,9 +1,3 @@
-/**
- * Axios instance configured for the Beeceptor mock backend.
- *
- * Swap `BASE_URL` to point at a real backend later — the rest of the app
- * consumes this instance and does not care about the underlying host.
- */
 import axios, { AxiosError, type AxiosInstance } from "axios";
 
 export const BASE_URL = "https://monish.free.beeceptor.com";
